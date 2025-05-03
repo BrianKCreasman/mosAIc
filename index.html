@@ -89,6 +89,9 @@
     <option value="Other">Other</option>
   </select>
 
+  <label>Specific Subject/Course Details (Optional):</label>
+  <input type="text" name="subjectCourseDetails" placeholder="e.g., Algebra 1, American Government, Biology 2 Honors">
+
   <label>Learning Standard(s):</label>
   <input type="text" name="learningStandards" placeholder="e.g., 4.OA.A.3" required>
 
@@ -101,19 +104,13 @@
   <label>Type of Performance-Based Assessment:</label>
   <select name="performanceTaskType" required>
     <option value="" disabled selected>Select type</option>
-    <option value="Real-World Modeling">Real-World Modeling - Students create a physical, digital, or conceptual model that visually or functionally represents a real-world system, concept, or phenomenon tied to Priority Standards. This deepens understanding by applying academic learning to real-world contexts with creativity and systems thinking.</option>
-
-    <option value="Real-World Solution">Real-World Solution - Students design and propose a practical, real-world solution to an authentic problem aligned to Priority Standards. This assessment cultivates critical thinking, innovation, and real-world application of academic knowledge.</option>
-
-    <option value="Real-World Communication">Real-World Communication - Students communicate their understanding of Priority Standards through real-world formats like presentations, podcasts, or exhibitions. This encourages clarity, confidence, and metacognitive reflection by sharing learning with an authentic audience.</option>
-
-    <option value="Real-World Discovery">Real-World Discovery - Students investigate a topic of personal or academic interest to uncover new insights connected to Priority Standards. This fosters intellectual curiosity, cultural awareness, and personal connection to academic learning.</option>
-
-    <option value="Real-World Collaboration">Real-World Collaboration - Students work collaboratively to create a shared product or solution that addresses real-world challenges while demonstrating mastery of academic content. This strengthens teamwork, communication, and accountability skills essential for success beyond school.</option>
-
-    <option value="Real-World Creation (Student-Driven Project)">Real-World Creation (Student-Driven Project) - Students co-design a project based on Priority Standards and their passions, selecting the focus, format, and process. This empowers creativity, innovation, and self-direction while showcasing mastery in a personally meaningful way.</option>
-
-    <option value="Real-World Synthesis (Interdisciplinary Inquiry)">Real-World Synthesis (Interdisciplinary Inquiry) - Students integrate two or more subjects to explore a real-world theme, question, or issue, demonstrating Priority Standard mastery across disciplines. This promotes interdisciplinary thinking, complex problem-solving, and richer real-world understanding.</option>
+    <option value="Real-World Modeling">Real-World Modeling</option>
+    <option value="Real-World Solution">Real-World Solution</option>
+    <option value="Real-World Communication">Real-World Communication</option>
+    <option value="Real-World Discovery">Real-World Discovery</option>
+    <option value="Real-World Collaboration">Real-World Collaboration</option>
+    <option value="Real-World Creation (Student-Driven Project)">Real-World Creation (Student-Driven Project)</option>
+    <option value="Real-World Synthesis (Interdisciplinary Inquiry)">Real-World Synthesis (Interdisciplinary Inquiry)</option>
   </select>
 
   <label>Durable Skills (check all that apply):</label><br>
@@ -160,7 +157,6 @@ const spinner = document.getElementById('spinner');
 const responseDiv = document.getElementById('response');
 const downloadButton = document.getElementById('downloadPDF');
 
-// ✅ Updated to your NEW Web App URL
 const webAppUrl = 'https://script.google.com/macros/s/AKfycbz9YgpoolURJdShZ6RgnicsXWM1qhtEVkyqHEmeg7xf3Wc071htECSmeFIYNpaI5E6nTA/exec';
 
 form.addEventListener('submit', async (e) => {
@@ -200,7 +196,6 @@ form.addEventListener('submit', async (e) => {
   }
 });
 
-// Save as PDF functionality
 document.getElementById('downloadPDF').addEventListener('click', () => {
   const newWindow = window.open('', '', 'width=800,height=600');
   newWindow.document.write('<html><head><title>Performance-Based Assessment</title></head><body>');
