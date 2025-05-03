@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Performance-Based Assessment Generator</title>
+  <style>
+    body {
+      font-family: 'Roboto', sans-serif;
+      background-color: #f8f9fa;
+      padding: 20px;
+      color: #333;
+    }
+    form {
+      background: #ffffff;
+      padding: 25px;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      max-width: 800px;
+      margin: auto;
+    }
+    input[type="text"], select, textarea {
+      width: 100%;
+      padding: 12px;
+      margin-top: 8px;
+      margin-bottom: 16px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+    }
+    button {
+      background-color: #007bff;
+      color: white;
+      padding: 14px 20px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 16px;
+      width: 100%;
+      margin-top: 10px;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+    label {
+      font-weight: bold;
+    }
+    #response {
+      background: #e9f7ef;
+      padding: 20px;
+      border-radius: 10px;
+      margin-top: 20px;
+      white-space: pre-wrap;
+      display: none;
+    }
+    #spinner {
+      display: none;
+      text-align: center;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+
+<form id="assessmentForm">
+  <label>Grade Level:</label>
+  <select name="gradeLevel" required>
+    <option value="" disabled selected>Select grade level</option>
+    <option value="Kindergarten">Kindergarten</option>
+    <option value="1st Grade">1st Grade</option>
+    <option value="2nd Grade">2nd Grade</option>
+    <option value="3rd Grade">3rd Grade</option>
+    <option value="4th Grade">4th Grade</option>
+    <option value="5th Grade">5th Grade</option>
+    <option value="6th Grade">6th Grade</option>
+    <option value="7th Grade">7th Grade</option>
+    <option value="8th Grade">8th Grade</option>
+    <option value="9th Grade">9th Grade</option>
+    <option value="10th Grade">10th Grade</option>
+    <option value="11th Grade">11th Grade</option>
+    <option value="12th Grade">12th Grade</option>
+  </select>
+
+  <label>Subject Area:</label>
+  <select name="subjectArea" required>
+    <option value="" disabled selected>Select subject area</option>
+    <option value="Math">Math</option>
+    <option value="English/Language Arts">English/Language Arts</option>
+    <option value="Science">Science</option>
+    <option value="Social Studies">Social Studies</option>
+    <option value="Other">Other</option>
+  </select>
+
+  <label>Learning Standard(s):</label>
+  <input type="text" name="learningStandards" placeholder="e.g., 4.OA.A.3" required>
+
+  <label>Learning Objective(s):</label>
+  <input type="text" name="learningObjectives" placeholder="What students should learn/do" required>
+
+  <label>Topic/Focus:</label>
+  <input type="text" name="topicFocus" placeholder="Main topic or real-world context" required>
+
+  <label>Type of Performance Task:</label>
+  <select name="performanceTaskType" required>
+    <option value="" disabled selected>Select type</option>
+    <option value="Project-Based Assessment">Project-Based Assessment</option>
+    <option value="Presentation">Presentation</option>
+    <option value="Real-World Problem Solving">Real-World Problem Solving</option>
+    <option value="Simulation/Role Play">Simulation/Role Play</option>
+    <option value="Other">Other</option>
+  </select>
+
+  <label>Durable Skills (check all that apply):</label><br>
+  <input type="checkbox" name="durableSkills" value="Critical Thinking"> Critical Thinking
+  <input type="checkbox" name="durableSkills" value="Creativity"> Creativity
+  <input type="checkbox" name="durableSkills" value="Collaboration"> Collaboration
+  <input type="checkbox" name="durableSkills" value="Communication"> Communication
+  <input type="checkbox" name="durableSkills" value="Problem-Solving"> Problem-Solving<br><br>
+
+  <label>Interdisciplinary Connections (check all that apply):</label><br>
+  <input type="checkbox" name="interdisciplinarySubjects" value="Writing"> Writing
+  <input type="checkbox" name="interdisciplinarySubjects" value="Social Studies"> Social Studies
+  <input type="checkbox" name="interdisciplinarySubjects" value="Math"> Math
+  <input type="checkbox" name="interdisciplinarySubjects" value="Career-Technical Education (CTE)"> Career-Technical Education (CTE)
+  <input type="checkbox" name="interdisciplinarySubjects" value="Science"> Science
+  <input type="checkbox" name="interdisciplinarySubjects" value="Other"> Other<br><br>
+
+  <label>Number of Real-World Occupations for Student Choice:</label>
+  <select name="occupationChoices" required>
+    <option value="" disabled selected>Select number</option>
+    <option value="2 occupations">2 occupations</option>
+    <option value="3 occupations">3 occupations</option>
+    <option value="4 occupations">4 occupations</option>
+    <option value="5 occupations">5 occupations</option>
+  </select>
+
+  <label>Special Instructions (Optional):</label>
+  <textarea name="specialInstructions" placeholder="Any special notes or directions for AI"></textarea>
+
+  <button type="submit">Generate Assessment</button>
+</form>
+
+<div id="spinner">
+  <img src="https://upload.wikimedia.org/wikipedia/commons/b/b1/Loading_icon.gif" alt="Loading..." width="100">
+</div>
+
+<div id="response"></div>
+
+<button id="downloadPDF" style="display:none;">Save as PDF</button>
+
+<script>
+const form = document.getElementById('assessmentForm');
+const spinner = document.getElementById('spinner');
+const responseDiv = document.getElementById('response');
+const downloadButton = document.getElementById('downloadPDF');
+
+form.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const formData = new FormData(form);
+
+  const durableSkillsArray = [];
+  form.querySelectorAll('input[name="durableSkills"]:checked').forEach(cb => durableSkillsArray.push(cb.value));
+  formData.set('durableSkills', durableSkillsArray.join(', '));
+
+  const interdisciplinarySubjectsArray = [];
+  form.querySelectorAll('input[name="interdisciplinarySubjects"]:checked').forEach(cb => interdisciplinarySubjectsArray.push(cb.value));
+  formData.set('interdisciplinarySubjects', interdisciplinarySubjectsArray.join(', '));
+
+  const data = Object.fromEntries(formData);
+
+  spinner.style.display = 'block';
+  responseDiv.style.display = 'none';
+  downloadButton.style.display = 'none';
+
+  const response = await fetch('https://script.google.com/macros/s/AKfycbwbZ5QrHQPZgjjXWLC9QxGckZfCs_fb2oO2-nBP8H9XGUNrOFlHAVFfTYu7yokd88q7eg/exec', {
+    method: 'POST',
+    body: JSON.stringify(data),
+    headers: { 'Content-Type': 'application/json' }
+  });
+
+  const result = await response.json();
+  spinner.style.display = 'none';
+  responseDiv.style.display = 'block';
+  responseDiv.innerText = result.reply;
+  downloadButton.style.display = 'block';
+});
+
+// Save as PDF functionality
+document.getElementById('downloadPDF').addEventListener('click', () => {
+  const newWindow = window.open('', '', 'width=800,height=600');
+  newWindow.document.write('<html><head><title>Performance-Based Assessment</title></head><body>');
+  newWindow.document.write('<pre>' + document.getElementById('response').innerText + '</pre>');
+  newWindow.document.write('</body></html>');
+  newWindow.document.close();
+  newWindow.print();
+});
+</script>
+
+</body>
+</html>
