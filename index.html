@@ -152,6 +152,9 @@ const spinner = document.getElementById('spinner');
 const responseDiv = document.getElementById('response');
 const downloadButton = document.getElementById('downloadPDF');
 
+// ✅ Updated to your NEW Web App URL
+const webAppUrl = 'https://script.google.com/macros/s/AKfycbz9YgpoolURJdShZ6RgnicsXWM1qhtEVkyqHEmeg7xf3Wc071htECSmeFIYNpaI5E6nTA/exec';
+
 form.addEventListener('submit', async (e) => {
   e.preventDefault();
   const formData = new FormData(form);
@@ -170,17 +173,23 @@ form.addEventListener('submit', async (e) => {
   responseDiv.style.display = 'none';
   downloadButton.style.display = 'none';
 
-  const response = await fetch('https://script.google.com/macros/s/AKfycbwbZ5QrHQPZgjjXWLC9QxGckZfCs_fb2oO2-nBP8H9XGUNrOFlHAVFfTYu7yokd88q7eg/exec', {
-    method: 'POST',
-    body: JSON.stringify(data),
-    headers: { 'Content-Type': 'application/json' }
-  });
+  try {
+    const response = await fetch(webAppUrl, {
+      method: 'POST',
+      body: JSON.stringify(data),
+      headers: { 'Content-Type': 'application/json' }
+    });
 
-  const result = await response.json();
-  spinner.style.display = 'none';
-  responseDiv.style.display = 'block';
-  responseDiv.innerText = result.reply;
-  downloadButton.style.display = 'block';
+    const result = await response.json();
+    spinner.style.display = 'none';
+    responseDiv.style.display = 'block';
+    responseDiv.innerText = result.reply;
+    downloadButton.style.display = 'block';
+  } catch (error) {
+    spinner.style.display = 'none';
+    alert('An error occurred. Please try again.');
+    console.error(error);
+  }
 });
 
 // Save as PDF functionality
